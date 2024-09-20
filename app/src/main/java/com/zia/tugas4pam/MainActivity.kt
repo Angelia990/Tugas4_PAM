@@ -3,6 +3,9 @@ package com.zia.tugas4pam
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,6 +21,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nameEditText: TextInputEditText
     private lateinit var rvStudent: RecyclerView
     private lateinit var adapter: ItemAdapter
+    private lateinit var radioGroupGender: RadioGroup
+    private lateinit var radioMale: RadioButton
+    private lateinit var radioFemale: RadioButton
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +50,25 @@ class MainActivity : AppCompatActivity() {
                 nimEditText.error = "Nim is required"
                 return@setOnClickListener
             }
-            val student = Student(name, nim)
+            val selectedGenderId = radioGroupGender.checkedRadioButtonId
+            if (selectedGenderId == -1) {
+                Toast.makeText(this, "Please select a gender", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val gender: String
+            val avatarResource: Int
+            if (selectedGenderId == radioMale.id) {
+                gender = "Laki-laki"
+            } else {
+                gender = "Perempuan"
+            }
+
+            val student = Student(name, nim, gender)
             adapter.addItem(student)
+
             nimEditText.text?.clear()
             nameEditText.text?.clear()
+            radioGroupGender.clearCheck()
         }
 
     }
@@ -55,6 +76,9 @@ class MainActivity : AppCompatActivity() {
         saveButton = findViewById(R.id.saveButton)
         nameEditText = findViewById(R.id.nameTextInputEditText)
         nimEditText = findViewById(R.id.nimTextInputEditText)
+        radioGroupGender = findViewById(R.id.radioGroupGender)
+        radioMale = findViewById(R.id.radioMale)
+        radioFemale = findViewById(R.id.radioFemale)
         rvStudent = findViewById(R.id.rvMahasiswa)
     }
 
